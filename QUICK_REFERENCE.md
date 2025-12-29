@@ -100,5 +100,4 @@ clock-board-todo/
 
 1. **查看完整文档**：[TODO_FEATURE_GUIDE.md](TODO_FEATURE_GUIDE.md)
 2. **查看测试清单**：[TODO_TEST_CHECKLIST.md](TODO_TEST_CHECKLIST.md)
-3. **查看版本历史**：[CHANGELOG_v1.1.0.md](CHANGELOG_v1.1.0.md)
 4. **查看源代码注释**：各文件中的 `//` 和 `<!--` 注释
