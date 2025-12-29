@@ -7,7 +7,8 @@ Added a more complete TODO board feature to the teojs clock-dashboard project, m
 
 好就好在这个项目的作者提供了开发的环境，所以我在此基础上，添加了一个“TODO看板的功能”。
 
-![todo界面](https://github.com/user-attachments/assets/6f6206d8-7d19-45f9-a301-171b8998daf6)
+![todo界面](https://github.com/user-attachments/assets/1cd4aca6-8f81-4c04-aafc-53a1b5624868)
+
 
 ✅主题上保持了和作者原来的一样的主题基本保持一致，没有什么“割裂感”
 
