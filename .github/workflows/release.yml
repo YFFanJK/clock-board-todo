@@ -1,0 +1,25 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*' # 当推送以 v 开头的标签时触发
+
+permissions:
+  contents: write # 必须开启写入权限以创建 Release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 获取完整历史以生成日志
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true # 让 GitHub 根据提交自动生成漂亮的 Release 说明
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
