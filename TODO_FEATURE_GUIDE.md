@@ -5,7 +5,7 @@
 本项目基于 Socket.IO 实现了跨设备的 TODO 任务管理系统，支持两种使用模式：
 
 ### 模式 1：展板模式（Display Mode）
-- **访问地址**：`http://<平板IP>:5173/` 或 `http://<服务端IP>:5173/`
+- **访问地址**：`http://<平板IP>:3000/` 或 `http://<服务端IP>:3000/`
 - **用途**：展示任务列表，适合在平板/大屏设备上查看和勾选任务
 - **特点**：
   - 以卡片形式展示任务，包含完整的任务信息（名称、简介、截止日期、标签）
@@ -19,7 +19,7 @@
   - 实时接收其他设备派发的任务
 
 ### 模式 2：派发模式（Edit Mode）
-- **访问地址**：`http://<服务端IP>:5173/?mode=edit`
+- **访问地址**：`http://<服务端IP>:3000/?mode=edit`
 - **用途**：专为手机/PC 优化的任务创建界面
 - **特点**：
   - 顶部：完整的任务创建表单，包括：
@@ -65,63 +65,11 @@ type TodoItem = {
 | `delete-task` | 客户端 | 服务端 | `string` (任务ID) |
 | `task-deleted` | 服务端 | 所有客户端 | `string` (任务ID) |
 
----
-
-## 快速开始
-
-### 1. 安装依赖
-
-```bash
-pnpm install
-# 或
-npm install
-```
-
-### 2. 启动 Socket.IO 服务端
-
-在项目根目录运行：
-
-```bash
-npm run start-server
-# 或直接运行：
-node server/index.js
-```
-
-服务端默认监听 **port 3001**，确保同一局域网内的设备可访问。
-
-### 3. 启动前端开发服务器
-
-另开一个终端窗口，在项目根目录运行：
-
-```bash
-pnpm dev
-# 或
-npm run dev
-```
-
-前端默认运行在 **port 5173**。
-
-### 4. 访问应用
-
-**在平板/展板上**：
-```
-http://<你的机器IP>:5173/
-```
-例如：`http://192.168.3.7:5173/`
-
-**在手机/PC 上创建任务**：
-```
-http://<同一服务器IP>:5173/?mode=edit
-```
-例如：`http://192.168.3.7:5173/?mode=edit`
-
----
-
 ## 使用示例
 
 ### 创建任务
 
-1. 在手机/PC 浏览器打开派发模式：`http://192.168.3.7:5173/?mode=edit`
+1. 在手机/PC 浏览器打开派发模式：`http://192.168.3.7:3000/?mode=edit`
 2. 填写表单：
    - **任务名称**（必填）：如 "完成周报"
    - **简介**（可选）：如 "需要整理本周的工作内容"
@@ -153,100 +101,6 @@ http://<同一服务器IP>:5173/?mode=edit
 在任意端（展板或派发），将鼠标悬停在任务卡片上，右上角会显示 **🗑️ 删除按钮**：
 - 点击删除按钮，确认删除后，任务会从所有设备的列表中彻底移除
 - 删除操作会实时同步到局域网内的所有设备
-
----
-
-## 配置与定制
-
-### 修改服务端地址
-
-如果你的 Socket.IO 服务端运行在其他地址或端口，修改文件：
-
-**src/stores/todos.ts**（第 13 行左右）：
-
-```typescript
-const serverUrl = `${location.protocol}//${location.hostname}:3001`
-```
-
-改为你的服务端地址，例如：
-
-```typescript
-const serverUrl = 'http://192.168.3.100:3001'
-// 或从环境变量读取：
-const serverUrl = import.meta.env.VITE_SOCKET_URL || `${location.protocol}//${location.hostname}:3001`
-```
-
-### 修改服务端端口
-
-在 **server/index.js** 中修改监听端口：
-
-```javascript
-const PORT = process.env.PORT || 3001  // 改为你想要的端口
-```
-
-### 持久化任务数据
-
-当前实现将任务保存在 SQLite 数据库中，重启后会丢失。如需持久化，可改进 **server/index.js**：
-
-**使用文件存储**：
-```javascript
-import fs from 'fs'
-
-let tasks = JSON.parse(fs.readFileSync('tasks.json', 'utf8') || '[]')
-
-function saveTasks() {
-  fs.writeFileSync('tasks.json', JSON.stringify(tasks, null, 2))
-}
-
-io.on('connection', (socket) => {
-  socket.emit('initial-tasks', tasks)
-
-  socket.on('new-task', (task) => {
-    tasks.unshift(task)
-    saveTasks()
-    io.emit('task-created', task)
-  })
-
-  socket.on('update-task', (task) => {
-    const idx = tasks.findIndex(t => t.id === task.id)
-    if (idx !== -1) tasks[idx] = task
-    saveTasks()
-    io.emit('task-updated', task)
-  })
-})
-```
-
----
-
-## 生产部署
-
-### 前端构建
-
-```bash
-npm run build
-```
-
-生成的静态文件在 `dist/` 目录中。
-
-### 部署注意事项
-
-1. **前端部署地址**：如部署到 `https://example.com/`
-2. **服务端部署**：确保服务端与前端在同一域或配置 CORS 允许跨域
-3. **修改 Socket.IO 连接地址**：在生产环境中，需要将 `src/stores/todos.ts` 中的 `serverUrl` 修改为指向生产环境的服务端地址
-4. **数据库备份**：定期备份 `tasks.db` 数据库文件，详见 [SQLite 持久化指南](SQLITE_PERSISTENCE_GUIDE.md)
-
----
-
-## 数据持久化
-
-✅ **已集成 SQLite 数据库，数据自动持久化！**
-
-- 任务数据存储在 `tasks.db` 数据库文件中
-- 服务端启动时自动加载历史任务
-- 无需额外配置，开箱即用
-- 详细配置和管理指南见 [SQLite 持久化指南](SQLITE_PERSISTENCE_GUIDE.md)
-
----
 
 ## 常见问题
 
@@ -328,28 +182,3 @@ function deleteTask(id: string) {
 │ 手机 / PC        │              │ 平板 / 大屏      │
 └──────────────────┘              └──────────────────┘
 ```
-
----
-
-## 文件结构
-
-```
-clock-dashboard/
-├── src/
-│   ├── components/
-│   │   ├── TodoView.vue        # 展板模式 - 任务显示卡片
-│   │   └── TodoEdit.vue        # 派发模式 - 任务创建表单 + 列表
-│   ├── stores/
-│   │   └── todos.ts            # Pinia store, Socket.IO 客户端
-│   └── App.vue                 # 主应用，路由模式逻辑
-├── server/
-│   └── index.js                # Socket.IO 服务端
-├── package.json
-└── README.md
-```
-
----
-
-## 许可证
-
-MIT
