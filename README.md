@@ -51,3 +51,7 @@ pnpm dev
 部署完成后，就可以通过部署设备IP:3000端口进行访问了
 
 对于要进行代办清单的编辑，局域网任意设备进入部署设备IP:3000/?mode=edit进行新建任务
+
+查看完整文档：TODO_FEATURE_GUIDE.md
+
+查看测试清单：TODO_TEST_CHECKLIST.md
