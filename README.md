@@ -9,6 +9,8 @@ Added a more complete TODO board feature to the teojs clock-dashboard project, m
 
 ![todo界面](https://github.com/user-attachments/assets/1cd4aca6-8f81-4c04-aafc-53a1b5624868)
 
+### TODO看板
+![TODO看板界面](https://github.com/user-attachments/assets/82ff9e55-f289-4e71-bd9b-69124249bec0)
 
 ✅主题上保持了和作者原来的一样的主题基本保持一致，没有什么“割裂感”
 
@@ -54,3 +56,4 @@ pnpm dev
 
 1. **查看完整文档**：[TODO_FEATURE_GUIDE.md](TODO_FEATURE_GUIDE.md)
 2. **查看测试清单**：[TODO_TEST_CHECKLIST.md](TODO_TEST_CHECKLIST.md)
+3. **快速开始**：[QUICK_REFERENCE.md](QUICK_REFERENCE.md)
